@@ -30,10 +30,36 @@ public static class PrintExtensions
 		return result.ToString();
 	}
 }
+public enum Direction
+{
+	Up,
+	UpRight,
+	UpLeft,
+	Down,
+	DownRight,
+	DownLeft,
+	Left,
+	Right
+}
+
+public record Position2D(int X, int Y);
 
 internal static class GridExtensions
 {
-	public static bool OutOfBounds<T>(this T[,] array, (int x, int y) position) => position.x < 0 || position.y < 0 || position.x >= array.GetLength(0) || position.y >= array.GetLength(1);
+	public static bool OutOfBounds<T>(this T[,] array, Position2D position) => position.X < 0 || position.Y < 0 || position.X >= array.GetLength(0) || position.Y >= array.GetLength(1);
+
+	public static Position2D Move(this Position2D current, Direction direction) => direction switch
+	{
+		Direction.Up => new(current.X - 1, current.Y),
+		Direction.Down => new(current.X + 1, current.Y),
+		Direction.Left => new(current.X, current.Y - 1),
+		Direction.Right => new(current.X, current.Y + 1),
+		Direction.UpRight => new(current.X - 1, current.Y + 1),
+		Direction.UpLeft => new(current.X - 1, current.Y - 1),
+		Direction.DownRight => new(current.X + 1, current.Y + 1),
+		Direction.DownLeft => new(current.X + 1, current.Y - 1),
+		_ => throw new NotImplementedException(),
+	};
 }
 
 internal static class EnumerableExtensions
