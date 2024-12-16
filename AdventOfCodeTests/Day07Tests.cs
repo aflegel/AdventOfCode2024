@@ -23,7 +23,7 @@ public class Day07Tests
 
 		var answer = day.Part1();
 
-		answer.Should().Be("41");
+		answer.Should().Be("3749");
 	}
 
 	[Fact]
@@ -33,6 +33,6 @@ public class Day07Tests
 
 		var answer = day.Part2();
 
-		answer.Should().Be("6");
+		answer.Should().Be("11387");
 	}
 }
