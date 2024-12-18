@@ -88,6 +88,18 @@ internal static class EnumerableExtensions
 
 		return res;
 	}
+
+	public static IEnumerable<Position2D> SearchAll(this char[,] source, char target)
+	{
+		for (var i = 0; i < source.GetLength(0); i++)
+		{
+			for (var j = 0; j < source.GetLength(1); j++)
+			{
+				if (source[i, j] == target)
+					yield return new(i, j);
+			}
+		}
+	}
 }
 
 internal static class CharExtensions
