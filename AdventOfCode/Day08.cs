@@ -1,5 +1,3 @@
-using System.Numerics;
-
 namespace AdventOfCode;
 
 public class Day08(string input) : IAdventDay

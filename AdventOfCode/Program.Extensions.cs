@@ -89,3 +89,8 @@ internal static class EnumerableExtensions
 		return res;
 	}
 }
+
+internal static class CharExtensions
+{
+	public static int ToInt(this char c) => c - '0';
+}
