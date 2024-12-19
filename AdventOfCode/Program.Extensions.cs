@@ -54,14 +54,14 @@ internal static class GridExtensions
 
 	public static Position2D Move(this Position2D current, Direction direction) => direction switch
 	{
-		Direction.Up => new(current.X - 1, current.Y),
-		Direction.Down => new(current.X + 1, current.Y),
-		Direction.Left => new(current.X, current.Y - 1),
-		Direction.Right => new(current.X, current.Y + 1),
-		Direction.UpRight => new(current.X - 1, current.Y + 1),
-		Direction.UpLeft => new(current.X - 1, current.Y - 1),
-		Direction.DownRight => new(current.X + 1, current.Y + 1),
-		Direction.DownLeft => new(current.X + 1, current.Y - 1),
+		Direction.Up => current + new Position2D(-1, 0),
+		Direction.Down => current + new Position2D(1, 0),
+		Direction.Left => current + new Position2D(0, -1),
+		Direction.Right => current + new Position2D(0, 1),
+		Direction.UpLeft => current + new Position2D(-1, -1),
+		Direction.UpRight => current + new Position2D(-1, 1),
+		Direction.DownLeft => current + new Position2D(1, -1),
+		Direction.DownRight => current + new Position2D(1, 1),
 		_ => throw new NotImplementedException(),
 	};
 }
@@ -89,17 +89,20 @@ internal static class EnumerableExtensions
 		return res;
 	}
 
-	public static IEnumerable<Position2D> SearchAll(this char[,] source, char target)
+	public static IEnumerable<Position2D> GetPositions(this char[,] source)
 	{
 		for (var i = 0; i < source.GetLength(0); i++)
 		{
 			for (var j = 0; j < source.GetLength(1); j++)
 			{
-				if (source[i, j] == target)
-					yield return new(i, j);
+				yield return new(i, j);
 			}
 		}
 	}
+
+	public static IEnumerable<Position2D> SearchAll(this char[,] source, char target)
+		=> source.GetPositions()
+			.Where(w => source[w.X, w.Y] == target);
 }
 
 internal static class CharExtensions
