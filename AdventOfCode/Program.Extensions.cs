@@ -46,6 +46,12 @@ public record Position2D(int X, int Y)
 {
 	public static Position2D operator -(Position2D a, Position2D b) => new(a.X - b.X, a.Y - b.Y);
 	public static Position2D operator +(Position2D a, Position2D b) => new(a.X + b.X, a.Y + b.Y);
+	public static Position2D operator %(Position2D a, Position2D b) => new(a.X % b.Y, a.Y % b.Y);
+
+	public static Position2D operator *(Position2D a, int b) => new(a.X * b, a.Y * b);
+	public static Position2D operator /(Position2D a, int b) => new(a.X / b, a.Y / b);
+
+	public override string ToString() => $"({X}, {Y})";
 }
 
 internal static class GridExtensions
