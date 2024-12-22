@@ -1,4 +1,4 @@
-using AdventOfCode.Legacy;
+using AdventOfCode.Map;
 namespace AdventOfCode;
 
 public class Day12(string input) : IAdventDay
@@ -6,7 +6,7 @@ public class Day12(string input) : IAdventDay
 	private readonly Direction[] directions = [Direction.Up, Direction.Down, Direction.Left, Direction.Right];
 	private readonly Direction[] diagonals = [Direction.UpLeft, Direction.UpRight, Direction.DownLeft, Direction.DownRight];
 
-	private char[,] InputArray { get; } = input.Split("\n").To2DArray();
+	private Map2D<char> InputArray { get; } = Map2D<char>.FromString(input);
 
 	public string Part1() => BuildMap().Select(CountEdges).Sum().ToString();
 
@@ -16,13 +16,13 @@ public class Day12(string input) : IAdventDay
 
 		foreach (var position in map)
 		{
-			var target = InputArray[position.X, position.Y];
+			var target = InputArray[position];
 			foreach (var direction in directions)
 			{
 				var next = position.Move(direction);
 				if (InputArray.OutOfBounds(next))
 					sum += map.Count;
-				else if (InputArray[next.X, next.Y] != target)
+				else if (InputArray[next] != target)
 					sum += map.Count;
 			}
 		}
@@ -32,7 +32,7 @@ public class Day12(string input) : IAdventDay
 	private List<HashSet<Position2D>> BuildMap()
 	{
 		var map = new List<HashSet<Position2D>>();
-		foreach (var position in InputArray.GetPositions())
+		foreach (var position in InputArray.Positions())
 		{
 			if (map.Any(a => a.Contains(position)))
 				continue;
@@ -43,7 +43,7 @@ public class Day12(string input) : IAdventDay
 	}
 	private HashSet<Position2D> GetRegion(Position2D position)
 	{
-		var target = InputArray[position.X, position.Y];
+		var target = InputArray[position];
 		var set = new HashSet<Position2D> { position };
 
 		void Recurse(Position2D pos)
@@ -54,7 +54,7 @@ public class Day12(string input) : IAdventDay
 				if (InputArray.OutOfBounds(next))
 					continue;
 
-				if (InputArray[next.X, next.Y] == target && !set.Contains(next))
+				if (InputArray[next] == target && !set.Contains(next))
 				{
 					set.Add(next);
 					Recurse(next);
@@ -75,7 +75,7 @@ public class Day12(string input) : IAdventDay
 
 		foreach (var position in map)
 		{
-			var target = InputArray[position.X, position.Y];
+			var target = InputArray[position];
 			var sides = EvaluateDirections(directions, target, position).ToList();
 
 			//skip sides == 1
@@ -100,9 +100,9 @@ public class Day12(string input) : IAdventDay
 		//inside corners cannot have an out of bounds alt position
 		if (InputArray.OutOfBounds(corner.Diagonal) || InputArray.OutOfBounds(corner.Alt1) || InputArray.OutOfBounds(corner.Alt2))
 			return false;
-		return InputArray[corner.Diagonal.X, corner.Diagonal.Y] != target
-			&& InputArray[corner.Alt1.X, corner.Alt1.Y] == target
-			&& InputArray[corner.Alt2.X, corner.Alt2.Y] == target;
+		return InputArray[corner.Diagonal] != target
+			&& InputArray[corner.Alt1] == target
+			&& InputArray[corner.Alt2] == target;
 	}
 
 	private static Corner GetCorner(Position2D position, Direction direction) => direction switch
@@ -121,7 +121,7 @@ public class Day12(string input) : IAdventDay
 			var next = position.Move(direction);
 			if (InputArray.OutOfBounds(next))
 				yield return direction;
-			else if (InputArray[next.X, next.Y] != target)
+			else if (InputArray[next] != target)
 				yield return direction;
 		}
 	}
