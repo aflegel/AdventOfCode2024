@@ -8,13 +8,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="System.CommandLine" Version="2.0.0-beta1.21308.1" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Update="*.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\AdventOfCode.Map\AdventOfCode.Map.csproj" />
   </ItemGroup>
 
 </Project>

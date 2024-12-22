@@ -1,5 +1,4 @@
 using System.Data;
-using Microsoft.VisualBasic;
 
 namespace AdventOfCode;
 

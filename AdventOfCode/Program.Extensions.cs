@@ -1,5 +1,5 @@
 using System.Text;
-namespace AdventOfCode;
+namespace AdventOfCode.Legacy;
 
 public static class PrintExtensions
 {

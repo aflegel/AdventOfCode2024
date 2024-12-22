@@ -1,3 +1,4 @@
+using AdventOfCode.Legacy;
 namespace AdventOfCode;
 
 public class Day12(string input) : IAdventDay
