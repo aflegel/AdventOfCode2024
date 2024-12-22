@@ -1,10 +1,10 @@
-using AdventOfCode.Legacy;
+using AdventOfCode.Map;
 namespace AdventOfCode;
 
 public class Day10(string input) : IAdventDay
 {
 	private readonly Direction[] directions = [Direction.Up, Direction.Down, Direction.Left, Direction.Right];
-	private char[,] InputArray { get; } = input.Split("\n").To2DArray();
+	private Map2D<char> InputArray { get; } = Map2D<char>.FromString(input);
 
 	public string Part1() => InputArray.SearchAll('0').Select(w => FindSummits(w, 0).Count).Sum().ToString();
 
@@ -20,7 +20,7 @@ public class Day10(string input) : IAdventDay
 			if (InputArray.OutOfBounds(next))
 				continue;
 
-			var nextHeight = InputArray[next.X, next.Y].ToInt();
+			var nextHeight = InputArray[next].ToInt();
 
 			if (nextHeight == current + 1)
 				sum.UnionWith(FindSummits(next, nextHeight));
@@ -44,7 +44,7 @@ public class Day10(string input) : IAdventDay
 			if (InputArray.OutOfBounds(next))
 				continue;
 
-			var nextHeight = InputArray[next.X, next.Y].ToInt();
+			var nextHeight = InputArray[next].ToInt();
 
 			if (nextHeight == current + 1)
 				sum += FindPaths(next, nextHeight);
