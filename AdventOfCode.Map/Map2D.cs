@@ -27,8 +27,8 @@ public class Map2D<T>
         _map = new T[height, width];
     }
 
-    public void Set(Position2D position, T value) => _map[position.X, position.Y] = value;
-    public T Get(Position2D position) => _map[position.X, position.Y];
+    public void Set(Position2D position, T value) => _map[position.Y, position.X] = value;
+    public T Get(Position2D position) => _map[position.Y, position.X];
 
     public void Fill(T value)
     {

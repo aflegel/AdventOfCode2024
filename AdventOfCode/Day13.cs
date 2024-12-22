@@ -25,18 +25,10 @@ public partial class Day13(string input) : IAdventDay
 			new(int.Parse(prize[1].Value), int.Parse(prize[2].Value)));
 	}).ToArray();
 
-	public string Part1()
-	{
-		var list = InputArray.Select(s => Calculate(s, 0)).ToList();
-		return list.Sum().ToString();
-	}
-	public string Part2()
-	{
-		var list = InputArray.Select(s => Calculate(s, 10000000000000)).ToList();
-		return list.Sum().ToString();
-	}
+	public string Part1() => InputArray.Select(s => Calculate(s, 0)).Sum().ToString();
+	public string Part2() => InputArray.Select(s => Calculate(s, 10000000000000)).Sum().ToString();
 
-	private long Calculate(Arcade item, long increase = 0)
+	private static long Calculate(Arcade item, long increase = 0)
 	{
 		var prize = increase > 0 ? item.Prize + new Position2(increase, increase) : item.Prize;
 
@@ -51,4 +43,3 @@ public partial class Day13(string input) : IAdventDay
 		return item.ButtonA * a + item.ButtonB * b == prize ? a * 3 + b : 0;
 	}
 }
-
