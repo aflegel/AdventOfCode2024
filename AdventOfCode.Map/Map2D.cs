@@ -5,7 +5,13 @@ namespace AdventOfCode.Map;
 public class Map2D<T>
 {
     private readonly T[,] _map;
-    public T this[Position2D index] => _map[index.Y, index.X];
+
+    public T this[Position2D index]
+    {
+        get => _map[index.Y, index.X];
+        set => _map[index.Y, index.X] = value;
+    }
+
     public int Width => _map.GetLength(1);
     public int Height => _map.GetLength(0);
 
@@ -27,9 +33,6 @@ public class Map2D<T>
         _map = new T[height, width];
     }
 
-    public void Set(Position2D position, T value) => _map[position.Y, position.X] = value;
-    public T Get(Position2D position) => _map[position.Y, position.X];
-
     public void Fill(T value)
     {
         for (var i = 0; i < Height; i++)
@@ -43,9 +46,9 @@ public class Map2D<T>
 
     public IEnumerable<Position2D> Positions()
     {
-        for (var i = 0; i < Height; i++)
+        for (var i = 0; i < Width; i++)
         {
-            for (var j = 0; j < Width; j++)
+            for (var j = 0; j < Height; j++)
             {
                 yield return new(i, j);
             }
@@ -77,7 +80,7 @@ public class Map2D<T>
             {
                 result.Append(_map[i, j]);
             }
-            if(i < Height - 1)
+            if (i < Height - 1)
                 result.Append('\n');
         }
 

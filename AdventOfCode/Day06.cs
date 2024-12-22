@@ -1,14 +1,15 @@
 
-using AdventOfCode.Legacy;
+using AdventOfCode.Map;
+
 namespace AdventOfCode;
 
 public class Day06(string input) : IAdventDay
 {
-	private char[,] InputArray { get; } = input.Split("\n").To2DArray();
+	private Map2D<char> InputArray { get; } = Map2D<char>.FromString(input);
 
 	public string Part1()
 	{
-		var current = FindStart();
+		var current = InputArray.SearchAll('^').First();
 		var currentDirection = Direction.Up;
 
 		var set = Traverse(InputArray, current, currentDirection);
@@ -24,22 +25,9 @@ public class Day06(string input) : IAdventDay
 		_ => throw new NotImplementedException()
 	};
 
-	private Position2D FindStart()
-	{
-		for (var i = 0; i < InputArray.GetLength(0); i++)
-		{
-			for (var j = 0; j < InputArray.GetLength(1); j++)
-			{
-				if (InputArray[i, j] == '^')
-					return new(i, j);
-			}
-		}
-		throw new Exception("No position found");
-	}
-
 	public string Part2()
 	{
-		var start = FindStart();
+		var start = InputArray.SearchAll('^').First();
 		var current = start;
 		var currentDirection = Direction.Up;
 
@@ -53,7 +41,7 @@ public class Day06(string input) : IAdventDay
 
 			for (var i = 0; i < 2; i++)
 			{
-				if (InputArray[next.X, next.Y] == '#')
+				if (InputArray[next] == '#')
 				{
 					currentDirection = Rotate(currentDirection);
 					next = current.Move(currentDirection);
@@ -63,10 +51,10 @@ public class Day06(string input) : IAdventDay
 			}
 			if (next != start)
 			{
-				var blah = (char[,])InputArray.Clone();
-				blah[next.X, next.Y] = '#';
+				var modified = InputArray.Clone();
+				modified[next] = '#';
 
-				if (Traverse(blah, start, Direction.Up).Count == 0)
+				if (Traverse(modified, start, Direction.Up).Count == 0)
 				{
 					set.Add(next);
 				}
@@ -77,7 +65,7 @@ public class Day06(string input) : IAdventDay
 		return set.Count.ToString();
 	}
 
-	private static HashSet<(Position2D, Direction)> Traverse(char[,] input, Position2D current, Direction direction)
+	private static HashSet<(Position2D, Direction)> Traverse(Map2D<char> input, Position2D current, Direction direction)
 	{
 		var set = new HashSet<(Position2D, Direction)>();
 
@@ -95,7 +83,7 @@ public class Day06(string input) : IAdventDay
 
 			for (var i = 0; i < 2; i++)
 			{
-				if (input[next.X, next.Y] == '#')
+				if (input[next] == '#')
 				{
 					direction = Rotate(direction);
 					next = current.Move(direction);

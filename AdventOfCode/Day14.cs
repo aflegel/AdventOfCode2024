@@ -62,7 +62,7 @@ public partial class Day14(string input) : IAdventDay
 
 		foreach (var robot in robots)
 		{
-			set.Set(robot.Position, '#');
+			set[robot.Position] = '#';
 		}
 
 		return set.ToString();
