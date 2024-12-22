@@ -1,9 +1,10 @@
-using AdventOfCode.Legacy;
+using AdventOfCode.Map;
+
 namespace AdventOfCode;
 
 public class Day08(string input) : IAdventDay
 {
-	private char[,] InputArray { get; } = input.Split("\n").To2DArray();
+	private Map2D<char> InputArray { get; } = Map2D<char>.FromString(input);
 	private char[] InputAntennas { get; } = [.. input.Where(char.IsLetterOrDigit).Distinct()];
 
 	public string Part1()
@@ -12,7 +13,7 @@ public class Day08(string input) : IAdventDay
 
 		foreach (var frequency in InputAntennas)
 		{
-			var antennas = Find(frequency).ToList();
+			var antennas = InputArray.SearchAll(frequency).ToList();
 
 			var antennaPairs = antennas.SelectMany(s => antennas, (a, b) => (a, b))
 				.Where(w => w.a != w.b).ToList();
@@ -36,25 +37,13 @@ public class Day08(string input) : IAdventDay
 			yield return pos;
 	}
 
-	private IEnumerable<Position2D> Find(char target)
-	{
-		for (var i = 0; i < InputArray.GetLength(0); i++)
-		{
-			for (var j = 0; j < InputArray.GetLength(1); j++)
-			{
-				if (InputArray[i, j] == target)
-					yield return new(i, j);
-			}
-		}
-	}
-
 	public string Part2()
 	{
 		var antinodes = new HashSet<Position2D>();
 
 		foreach (var frequency in InputAntennas)
 		{
-			var antennas = Find(frequency).ToList();
+			var antennas = InputArray.SearchAll(frequency).ToList();
 
 			var antennaPairs = antennas.SelectMany(s => antennas, (a, b) => (a, b))
 				.Where(w => w.a != w.b).ToList();

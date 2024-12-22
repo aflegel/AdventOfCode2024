@@ -35,22 +35,22 @@ public class Map2D<T>
 
     public void Fill(T value)
     {
-        for (var i = 0; i < Height; i++)
+        for (var y = 0; y < Height; y++)
         {
-            for (var j = 0; j < Width; j++)
+            for (var x = 0; x < Width; x++)
             {
-                _map[i, j] = value;
+                _map[y, x] = value;
             }
         }
     }
 
     public IEnumerable<Position2D> Positions()
     {
-        for (var i = 0; i < Width; i++)
+        for (var x = 0; x < Width; x++)
         {
-            for (var j = 0; j < Height; j++)
+            for (var y = 0; y < Height; y++)
             {
-                yield return new(i, j);
+                yield return new(x, y);
             }
         }
     }
@@ -61,11 +61,11 @@ public class Map2D<T>
 
     public void PrintToConsole()
     {
-        for (var i = 0; i < Height; i++)
+        for (var y = 0; y < Height; y++)
         {
-            for (var j = 0; j < Width; j++)
+            for (var x = 0; x < Width; x++)
             {
-                Console.Write(_map[i, j]);
+                Console.Write(_map[y, x]);
             }
             Console.WriteLine();
         }
