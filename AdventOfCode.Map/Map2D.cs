@@ -82,6 +82,8 @@ public class Map2D<T>
 
         return result.ToString();
     }
+
+    public Map2D<T> Clone() => new Map2D<T>(_map.Clone() as T[,]);
 }
 
 internal static class EnumerableExtensions
