@@ -33,6 +33,12 @@ public class Map2D<T>
         _map = new T[height, width];
     }
 
+    public Map2D(int width, int height, T defaultValue)
+    {
+        _map = new T[height, width];
+        Fill(defaultValue);
+    }
+
     public void Fill(T value)
     {
         for (var y = 0; y < Height; y++)

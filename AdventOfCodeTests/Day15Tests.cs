@@ -45,6 +45,6 @@ v^^>>><<^^<>>^v^<v^vv<>v^<<>^<^v^v><^<<<><<^<v><v<>vv>>v><v^<vv<>v^<<^".ReplaceL
 
 		var answer = day.Part2();
 
-		answer.Should().Be("875318608908");
+		answer.Should().Be("9021");
 	}
 }
