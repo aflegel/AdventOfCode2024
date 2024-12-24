@@ -5,6 +5,8 @@ VisualStudioVersion = 17.0.31912.275
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdventOfCode", "AdventOfCode\AdventOfCode.csproj", "{4D2B565C-441D-47BD-8981-DB20016AC5B9}"
 EndProject
+Project("{da755712-6f8b-439c-a95e-aa2129d6c9e6}") = "AdventOfCode.Map", "AdventOfCode.Map\AdventOfCode.Map.csproj", "{f357fbc7-57b3-43ee-9689-9d6683ba66a9}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdventOfCodeTests", "AdventOfCodeTests\AdventOfCodeTests.csproj", "{AF30F610-190D-4AF2-942A-EE9CC2CF7579}"
 EndProject
 Global

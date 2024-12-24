@@ -23,15 +23,9 @@ public class Map2D<T>
         return new Map2D<char>(map);
     }
 
-    public Map2D(T[,] map)
-    {
-        _map = map;
-    }
+    public Map2D(T[,] map) => _map = map;
 
-    public Map2D(int width, int height)
-    {
-        _map = new T[height, width];
-    }
+    public Map2D(int width, int height) => _map = new T[height, width];
 
     public Map2D(int width, int height, T defaultValue)
     {
