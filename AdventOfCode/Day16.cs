@@ -14,7 +14,7 @@ public class Day16(string input) : IAdventDay
 			if (obj is DijkstraNode other)
 			{
 				var cost = Cost.CompareTo(other.Cost);
-				var position = Position.Compare(Position, other.Position);
+				var position = Position.CompareTo(other.Position);
 				var direction = Direction.CompareTo(other.Direction);
 
 				return cost != 0 ? cost : position != 0 ? position : direction;

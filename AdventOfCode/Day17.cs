@@ -52,7 +52,6 @@ public class Day17(string input) : IAdventDay
 					throw new InvalidOperationException($"Unknown instruction: {opCode}");
 			};
 
-
 			index += 2;
 		}
 

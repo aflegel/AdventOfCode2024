@@ -12,7 +12,7 @@ public enum Direction
     Right
 }
 
-public record Position2D(int X, int Y) : IComparer<Position2D>
+public record Position2D(int X, int Y) : IComparable<Position2D>
 {
     public static Position2D operator -(Position2D a, Position2D b) => new(a.X - b.X, a.Y - b.Y);
     public static Position2D operator +(Position2D a, Position2D b) => new(a.X + b.X, a.Y + b.Y);
@@ -35,6 +35,8 @@ public record Position2D(int X, int Y) : IComparer<Position2D>
         _ => throw new NotImplementedException(),
     };
 
-    public override string ToString() => $"({X}, {Y})";
-	public int Compare(Position2D? x, Position2D? y) => x == null || y == null ? 0 : x.Y == y.Y ? x.X.CompareTo(y.X) : x.Y.CompareTo(y.Y);
+    public override string ToString() => $"{X},{Y}";
+
+    public int CompareTo(Position2D? other) => other is not null ? other.X == X ? other.Y.CompareTo(Y) : other.X.CompareTo(X) : -1;
+	public int CompareTo(object? obj) => obj is Position2D pos ? CompareTo(pos) : -1;
 }
