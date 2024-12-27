@@ -25,24 +25,33 @@ public class Day19(string input) : IAdventDay
 		return null;
 	}
 
-	public string Part2() => Designs.Select(ProcessSet).Sum().ToString();
-
-	private int ProcessSet(string design)
+	public string Part2()
 	{
-		if (design.Length == 0)
-			return 1;
+		var previousPatterns = new Dictionary<string, ulong>();
 
-		var available = Patterns.Where(w => w.StartsWith(design[0]));
-		var count = 0;
-		foreach (var pattern in available)
+		ulong ProcessSet(string design)
 		{
-			if (design.Length >= pattern.Length && design[..pattern.Length] == pattern)
+			if (design.Length == 0)
+				return 1;
+
+			if (previousPatterns.TryGetValue(design, out var result))
+				return result;
+
+			var available = Patterns.Where(w => w.StartsWith(design[0]));
+			var count = 0ul;
+			foreach (var pattern in available)
 			{
-				var results = ProcessSet(design[pattern.Length..]);
-				count += results;
+				if (design.Length >= pattern.Length && design[..pattern.Length] == pattern)
+				{
+					var results = ProcessSet(design[pattern.Length..]);
+					previousPatterns.TryAdd(design[pattern.Length..], results);
+					count += results;
+				}
 			}
+
+			return count;
 		}
 
-		return count;
+		return Designs.Select(ProcessSet).Aggregate((a, b) => a + b).ToString();
 	}
 }
