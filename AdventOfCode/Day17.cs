@@ -2,51 +2,53 @@ namespace AdventOfCode;
 
 public class Day17(string input) : IAdventDay
 {
-	private Dictionary<string, int> InputRegisters { get; } = input.Split("\n\n")[0].Split("\n")
-		.ToDictionary(s => s[9].ToString(), s => Convert.ToInt32(s[11..]));
+	private Dictionary<char, int> InputRegisters { get; } = input.Split("\n\n")[0].Split("\n")
+		.ToDictionary(s => s[9], s => Convert.ToInt32(s[11..]));
 
 	private string[] InputInstructions { get; } = [.. input.Split("\n\n")[1][9..].Split(',')];
 
-	public string Part1()
+	public string Part1() => RunProgram(InputRegisters['A'], InputRegisters['B'], InputRegisters['C'], InputInstructions);
+
+	private static string RunProgram(int a, int b, int c, string[] instructions)
 	{
 		List<string> output = [];
 		var index = 0;
 
 		while (true)
 		{
-			if (index >= InputInstructions.Length)
+			if (index >= instructions.Length)
 				break;
 
-			var opCode = InputInstructions[index];
-			var operand = InputInstructions[index + 1];
+			var opCode = instructions[index];
+			var operand = instructions[index + 1];
 
 			switch (opCode)
 			{
 				case "0":
-					InputRegisters["A"] = (int)(InputRegisters["A"] / Math.Pow(2, Combo(operand)));
+					a = (int)(a / Math.Pow(2, Combo(operand)));
 					break;
 				case "1":
-					InputRegisters["B"] = InputRegisters["B"] ^ int.Parse(operand);
+					b ^= int.Parse(operand);
 					break;
 				case "2":
-					InputRegisters["B"] = Combo(operand) % 8;
+					b = Combo(operand) % 8;
 					break;
 				case "3":
-					int? jump = InputRegisters["A"] == 0 ? null : int.Parse(operand);
+					int? jump = a == 0 ? null : int.Parse(operand);
 					if (jump is not null)
 						index = jump.Value - 2;
 					break;
 				case "4":
-					InputRegisters["B"] = InputRegisters["B"] ^ InputRegisters["C"];
+					b ^= c;
 					break;
 				case "5":
 					output.Add((Combo(operand) % 8).ToString());
 					break;
 				case "6":
-					InputRegisters["B"] = (int)(InputRegisters["A"] / Math.Pow(2, Combo(operand)));
+					b = (int)(a / Math.Pow(2, Combo(operand)));
 					break;
 				case "7":
-					InputRegisters["C"] = (int)(InputRegisters["A"] / Math.Pow(2, Combo(operand)));
+					c = (int)(a / Math.Pow(2, Combo(operand)));
 					break;
 				default:
 					throw new InvalidOperationException($"Unknown instruction: {opCode}");
@@ -55,20 +57,41 @@ public class Day17(string input) : IAdventDay
 			index += 2;
 		}
 
+		int Combo(string instruction) => instruction switch
+		{
+			"0" => 0,
+			"1" => 1,
+			"2" => 2,
+			"3" => 3,
+			"4" => a,
+			"5" => b,
+			"6" => c,
+			_ => throw new InvalidOperationException($"Unknown instruction: {instruction}")
+		};
+
 		return string.Join(",", output);
 	}
 
-	private int Combo(string instruction) => instruction switch
+	public string Part2()
 	{
-		"0" => 0,
-		"1" => 1,
-		"2" => 2,
-		"3" => 3,
-		"4" => InputRegisters["A"],
-		"5" => InputRegisters["B"],
-		"6" => InputRegisters["C"],
-		_ => throw new InvalidOperationException($"Unknown instruction: {instruction}")
-	};
+		var newA = InputRegisters['A'];
+		var result = RunProgram(InputRegisters['A'], InputRegisters['B'], InputRegisters['C'], InputInstructions);
+		var target = string.Join(",", InputInstructions);
+		while (result != target)
+		{
+			//if (result.Length > target.Length)
+			//	return "Oops";
 
-	public string Part2() => throw new NotImplementedException();
+			newA += 1;
+			try
+			{
+
+				result = RunProgram(newA, 0, 0, InputInstructions);
+			}
+			catch { }
+		}
+
+
+		return newA.ToString();
+	}
 }
