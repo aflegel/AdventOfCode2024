@@ -7,29 +7,13 @@ public class Day16(string input) : IAdventDay
 	private Map2D<char> InputMap { get; } = Map2D<char>.FromString(input);
 	private Direction[] Directions { get; } = [Direction.Up, Direction.Right, Direction.Down, Direction.Left];
 
-	private record DijkstraNode(int Cost, Position2D Position, Direction Direction) : IComparable
-	{
-		public int CompareTo(object? obj)
-		{
-			if (obj is DijkstraNode other)
-			{
-				var cost = Cost.CompareTo(other.Cost);
-				var position = Position.CompareTo(other.Position);
-				var direction = Direction.CompareTo(other.Direction);
-
-				return cost != 0 ? cost : position != 0 ? position : direction;
-			};
-
-			return -1;
-		}
-	}
-
 	public string Part1()
 	{
 		var start = InputMap.SearchAll('S').First();
 		var end = InputMap.SearchAll('E').First();
 
-		var sortedSet = new SortedSet<DijkstraNode>
+		var visited = new HashSet<Position2D>();
+		var sortedSet = new SortedSet<(int Cost, Position2D Position, Direction Direction)>
 		{
 			new(0, start, Direction.Right)
 		};
@@ -42,48 +26,79 @@ public class Day16(string input) : IAdventDay
 
 			sortedSet.Remove(sortedSet.Min);
 
+			if (!visited.Add(current))
+				continue; // Skip if already visited
+
 			foreach (var (pos, dir) in GetNext(current, direction))
 			{
-				var move = (direction, dir) switch
-				{
-					_ when direction == dir => 1,
-					_ when Opposites(direction, dir) => 2001,
-					_ when !Opposites(direction, dir) => 1001,
-					_ => int.MaxValue
-				};
+				var move = direction == dir ? 1 : 1001;
 
-				sortedSet.Add(new(cost + move, pos, dir));
+				if (!visited.Contains(pos))
+					sortedSet.Add(new(cost + move, pos, dir));
 			}
 		}
 		return "Nothing found";
 	}
 
-	private static bool Opposites(Direction a, Direction b) => a switch
-	{
-		Direction.Up => b == Direction.Down,
-		Direction.Down => b == Direction.Up,
-		Direction.Left => b == Direction.Right,
-		Direction.Right => b == Direction.Left,
-		_ => false
-	};
-
 	private IEnumerable<(Position2D pos, Direction dir)> GetNext(Position2D current, Direction currentDirection)
 	{
 		foreach (var direction in Directions)
 		{
-			if (Opposites(currentDirection, direction))
-			{
+			if (currentDirection.IsOpposite(direction))
 				continue;
-			}
+
 			var next = current.Move(direction);
 			if (InputMap.OutOfBounds(next) || InputMap[next] == '#')
-			{
 				continue;
-			}
 
 			yield return (next, direction);
 		}
 	}
 
-	public string Part2() => throw new NotImplementedException();
+	public string Part2()
+	{
+		var start = InputMap.SearchAll('S').First();
+		var end = InputMap.SearchAll('E').First();
+
+		var sortedSet = new PriorityQueue<(Position2D Position, Direction Direction, HashSet<Position2D> History), int>();
+
+		sortedSet.Enqueue((start, Direction.Right, []), 0);
+
+		var visited = new Dictionary<Position2D, int>();
+		var output = new HashSet<Position2D>();
+		var minCost = int.MaxValue;
+
+		while (sortedSet.TryDequeue(out var state, out var cost))
+		{
+			var (current, direction, history) = state;
+			if (current == end)
+			{
+				if (cost < minCost)
+				{
+					minCost = cost;
+					output = [];
+				}
+
+				if (cost == minCost)
+					output = [.. output.Union(history), current];
+
+				//skip processing adjacent tiles
+				continue;
+			}
+
+			visited.TryAdd(current, cost);
+
+			foreach (var (pos, dir) in GetNext(current, direction))
+			{
+				var move = direction == dir ? 1 : 1001;
+
+				// limit the search to plausible similar length paths
+				if (visited.TryGetValue(pos, out var prev) && Math.Abs(prev - cost + move) > 1000)
+					continue;
+
+				sortedSet.Enqueue((pos, dir, [.. history, current]), cost + move);
+			}
+		}
+		return output.Count.ToString();
+	}
 }
